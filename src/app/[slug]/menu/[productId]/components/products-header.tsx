@@ -17,7 +17,7 @@ const ProductsHeader = ({product}: ProductsHeaderProps) => {
 
     const handleBackClick = () => router.back();
     return ( 
-        <div className="relative h-[300px] w-full">
+        <div className="relative min-h-[300px] w-full">
             <Button
                 onClick={handleBackClick}
                 variant="secondary"
