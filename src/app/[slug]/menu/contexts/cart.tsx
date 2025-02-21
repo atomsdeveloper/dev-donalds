@@ -9,16 +9,16 @@ interface CartProduct extends Pick<Products, "id" | "name" | "price" | "imageUrl
 
 export interface ICartContext {
     isOpen: boolean;
-    products: CartProduct[];
+    productsCart: CartProduct[];
     toggleIsOpen: () => void;
-    addProduct: (product: CartProduct) => void;
+    addProductCart: (product: CartProduct) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
     isOpen: false,
-    products: [],
+    productsCart: [],
     toggleIsOpen: () => {},
-    addProduct: () => {}
+    addProductCart: () => {}
 })
 
 interface ChildrenProps {
@@ -26,23 +26,48 @@ interface ChildrenProps {
 }
 
 export const CartProvider = ({children}: ChildrenProps) => {
-    const [products, setProducts] = useState<CartProduct[]>([]);
+    const [productsCart, setProductsCart] = useState<CartProduct[]>([]);
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    // Troca o valor atual do carrinho (true - false)
     const toggleIsOpen = () => {
         setIsOpen(prev => !prev)
     }
 
-    // Adiciona o produto a array de produtos do Cart.
-    const addProduct = (product: CartProduct) => {
-        // Retorna todos os produtos anteriores juntamente com o novo produto recebido.
-        setProducts(prev => [...prev, product])
+    // Adiciona o produto a array de produtos do carrinho.
+    const addProductCart = (productReceive: CartProduct) => {
+
+        // Verificar se o produto já está no carrinho
+        const productIsAlreadyOnTheCart = productsCart.some(productCart => productCart.id === productReceive.id);
+        
+        // Se não estiver, adicionar ao carrinho
+        if(!productIsAlreadyOnTheCart) {
+            return setProductsCart(productsThatAlreadyCart => [...productsThatAlreadyCart, productReceive])
+        }
+    
+        // Se ele estiver no carinho
+        setProductsCart(productsCart => {
+            // Percorre os produtos do carrinho
+            return productsCart.map(productCart => {
+                // Verifica qual o id do produto do carrinho é igual o id do produto recebido
+                if(productCart.id === productReceive.id) {
+                    return {
+                        ...productCart,
+                        // adiciona a quantida ao produto
+                        quantity: productCart.quantity + productReceive.quantity
+                    }
+                }
+
+                return productCart
+            })
+        })
     }
     return (
         <CartContext.Provider value={{
             isOpen,
-            products,
+            productsCart,
             toggleIsOpen,
-            addProduct
+            addProductCart
         }}>
             {children}
         </CartContext.Provider>

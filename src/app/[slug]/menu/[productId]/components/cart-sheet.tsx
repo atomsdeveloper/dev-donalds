@@ -5,14 +5,14 @@ import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { CartContext } from "../../contexts/cart";
 
 const CartSheet = () => {
-    const {isOpen, toggleIsOpen, products} = useContext(CartContext)
+    const {isOpen, toggleIsOpen, productsCart} = useContext(CartContext)
     return ( 
         <Sheet open={isOpen} onOpenChange={toggleIsOpen}>
             <SheetContent>
                 Cart Is Open
             </SheetContent>
-            {products.map((product) => (
-                <h1 key={product.id}>{product.name}</h1>
+            {productsCart.map((product) => (
+                <h1 key={product.id}>{product.name} - {product.quantity}</h1>
             ))}
         </Sheet>
     );

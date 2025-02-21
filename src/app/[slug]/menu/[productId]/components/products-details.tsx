@@ -25,7 +25,7 @@ interface ProductsDetailsProps {
 }
 
 const ProductsDetails = ({product}: ProductsDetailsProps) => {
-    const {toggleIsOpen, addProduct} = useContext(CartContext)
+    const {toggleIsOpen, addProductCart} = useContext(CartContext)
     const [quantity, setQuantity] = useState<number>(1)
 
     const handleDecreaseQuantity = () => {
@@ -43,10 +43,10 @@ const ProductsDetails = ({product}: ProductsDetailsProps) => {
     }
 
     const handleAddToCart = () => {
-        // addProduct vem do CartContext .
+        // addProductCart vem do CartContext .
         // Recebe um parametro product que tem a interface CartProduct.
         // Essa interface precisa receber o product mais o valor de quantity.
-        addProduct({
+        addProductCart({
             ...product,
             quantity,
         })
