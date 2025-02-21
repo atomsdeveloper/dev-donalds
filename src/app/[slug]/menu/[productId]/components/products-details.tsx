@@ -25,7 +25,7 @@ interface ProductsDetailsProps {
 }
 
 const ProductsDetails = ({product}: ProductsDetailsProps) => {
-    const {toggleIsOpen} = useContext(CartContext)
+    const {toggleIsOpen, addProduct} = useContext(CartContext)
     const [quantity, setQuantity] = useState<number>(1)
 
     const handleDecreaseQuantity = () => {
@@ -42,7 +42,14 @@ const ProductsDetails = ({product}: ProductsDetailsProps) => {
         setQuantity(prev => prev + 1)
     }
 
-    const handleToggleIsOpen = () => {
+    const handleAddToCart = () => {
+        // addProduct vem do CartContext .
+        // Recebe um parametro product que tem a interface CartProduct.
+        // Essa interface precisa receber o product mais o valor de quantity.
+        addProduct({
+            ...product,
+            quantity,
+        })
         toggleIsOpen();
     }
 
@@ -105,7 +112,7 @@ const ProductsDetails = ({product}: ProductsDetailsProps) => {
                 </ScrollArea>
             </div>
             
-            <Button className="rounded-full w-full mt-3" onClick={handleToggleIsOpen}>
+            <Button className="rounded-full w-full mt-3" onClick={handleAddToCart}>
                 Adicionar à sacola
             </Button>
         </div>
