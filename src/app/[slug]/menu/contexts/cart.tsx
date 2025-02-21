@@ -34,7 +34,7 @@ export const CartProvider = ({children}: ChildrenProps) => {
         setIsOpen(prev => !prev)
     }
 
-    // Adiciona o produto a array de produtos do carrinho.
+    // Adiciona o produto recebido ao array de produtos do carrinho.
     const addProductCart = (productReceive: CartProduct) => {
 
         // Verificar se o produto já está no carrinho
