@@ -13,7 +13,8 @@ export interface ICartContext {
     productsCart: CartProduct[];
     toggleIsOpen: () => void;
     addProductCart: (product: CartProduct) => void;
-    decreaseQuantityProductCart: (productId: string) => void
+    decreaseQuantityProductCart: (productId: string) => void,
+    increaseQuantityProductCart: (productId: string) => void,
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -21,7 +22,8 @@ export const CartContext = createContext<ICartContext>({
     productsCart: [],
     toggleIsOpen: () => {},
     addProductCart: () => {},
-    decreaseQuantityProductCart: () => {}
+    decreaseQuantityProductCart: () => {},
+    increaseQuantityProductCart: () => {}
 })
 
 interface ChildrenProps {
@@ -85,13 +87,35 @@ export const CartProvider = ({children}: ChildrenProps) => {
             })
         })
     }
+        
+    const increaseQuantityProductCart = (productId: string) => {
+        setProductsCart(productsCart => {
+            // Percorre os produtos do carrinho
+            return productsCart.map(productCart => {
+                // Verifica se o produto atual percorrido dentro de produtos tem o id diferente do id recebido.
+                if(productCart.id !== productId) {
+                    // Se for diferente não reliza nenhuma ação
+                    return productCart
+                }
+                // Verifica se a quantidade do produto é 1
+                if(productCart.quantity === 1) {
+                    // Se for igual 1 não realiza nehuma ação
+                    return productCart
+                }
+
+                // Passado das validações acima que dizer que posso aumentar a quantidade do carrinhp
+                return {...productCart, quantity: productCart.quantity + 1};
+            })
+        })
+    }
     return (
         <CartContext.Provider value={{
             isOpen,
             productsCart,
             toggleIsOpen,
             addProductCart,
-            decreaseQuantityProductCart
+            decreaseQuantityProductCart,
+            increaseQuantityProductCart
         }}>
             {children}
         </CartContext.Provider>
