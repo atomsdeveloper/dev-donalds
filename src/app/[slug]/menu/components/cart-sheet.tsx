@@ -41,6 +41,7 @@ const CartSheet = () => {
             </CardContent>
           </Card>
 
+          {/* Botão que altera o estado para true para limpar dados do formulário após fechar o dialog */}
           <Button
             className="w-full rounded-s-full"
             onClick={() => setFinishOrderDialogIsOpen(true)}

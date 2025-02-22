@@ -1,8 +1,13 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ConsumptionMethod } from "@prisma/client";
+import { Loader2Icon } from "lucide-react";
+import { useParams, useSearchParams } from "next/navigation";
+import { useContext, useTransition } from "react";
 import { Form, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +30,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
+import { createOrder } from "../actions/create-orders";
+import { CartContext } from "../contexts/cart";
 import { isValidCpf } from "../helpers/cpf";
 
 // Craindo esquema de válidação de formulário com o zod.
@@ -52,6 +59,11 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
+  const { productsCart } = useContext(CartContext);
+  const { slug } = useParams<{ slug: string }>();
+
+  const [isPending, starTrasition] = useTransition()
+
   // React useForm usa o TypeFormSchema criado acima como tipos.
   const form = useForm<TypeFormSchema>({
     // React useForm usa o formSchema criado acima para válidar o formulário com os dados.
@@ -63,9 +75,28 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
     shouldUnregister: true,
   });
 
+  const consumptionMethod = useSearchParams().get(
+    "consumptionMethod",
+  ) as ConsumptionMethod;
+
   // Só vai ser executado se os dados do formulário forem válidos.
-  const onSubmit = (data: TypeFormSchema) => {
-    console.log(data);
+  const onSubmit = async (data: TypeFormSchema) => {
+    try {
+      starTrasition(async () => {
+        await createOrder({
+          consumptionMethod,
+          custumerCpf: data.cpf,
+          custumerName: data.name,
+          products: productsCart,
+          slug,
+        });
+
+        onOpenChange(false);
+        toast.success("Pedido finalizado com sucesso.")
+      })
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -122,9 +153,10 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                 )}
               />
 
+              {/* Botões do Dialog */}
               <DrawerFooter>
-                <Button type="submit" variant="destructive">
-                  Finalizar
+                <Button type="submit" variant="destructive" disabled={isPending}>
+                  {isPending ? <Loader2Icon className="animate-spin"/> : "Finalizar"}
                 </Button>
 
                 <DrawerClose asChild>
