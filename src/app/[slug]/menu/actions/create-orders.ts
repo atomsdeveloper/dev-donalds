@@ -1,4 +1,5 @@
 import { ConsumptionMethod } from "@prisma/client";
+import { redirect } from "next/navigation";
 
 import { db } from "@/lib/prisma";
 
@@ -21,8 +22,9 @@ export const createOrder = async (input: CreateOrderInputProps) => {
       slug: input.slug,
     },
   });
+
   if (!restaurant) {
-    new Error("Restaurante não encontrado.");
+    throw new Error("Restaurante não encontrado.");
   }
 
   const productsWithPrice = await db.products.findMany({
@@ -56,6 +58,8 @@ export const createOrder = async (input: CreateOrderInputProps) => {
         0,
       ),
       consumptionMethod: input.consumptionMethod,
+      restaurantId: restaurant.id
     },
   });
+  redirect(`/${input.slug}/orders`)
 };
