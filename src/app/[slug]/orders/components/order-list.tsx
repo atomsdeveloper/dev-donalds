@@ -1,3 +1,5 @@
+"use client"
+
 import { OrderStatus, Prisma } from "@prisma/client";
 import { Separator } from "@radix-ui/react-separator";
 import { ChevronLeftIcon, ScrollTextIcon } from "lucide-react";

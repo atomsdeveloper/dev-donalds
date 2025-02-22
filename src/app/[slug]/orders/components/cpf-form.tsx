@@ -57,7 +57,7 @@ const CpfForm = () => {
     // Só vai ser executado se os dados do formulário forem válidos.
     const onSubmit = async (data: TypeFormSchema) => {
         // Joga para a rota de pedidos passando o Cpf.
-      router.push(`${path}?cpf=${removeCpfPunctuation(data.cpf)}`)
+      router.replace(`${path}?cpf=${removeCpfPunctuation(data.cpf)}`)
     };
 
     const handleCancel = () => router.back();
