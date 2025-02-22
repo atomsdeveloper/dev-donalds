@@ -10,7 +10,8 @@ export interface CartProduct extends
 
 export interface ICartContext {
     isOpen: boolean;
-    total: number
+    total: number;
+    totalQuantity: number;
     productsCart: CartProduct[];
     toggleIsOpen: () => void;
     addProductCart: (product: CartProduct) => void;
@@ -22,6 +23,7 @@ export interface ICartContext {
 export const CartContext = createContext<ICartContext>({
     isOpen: false,
     total: 0,
+    totalQuantity: 0,
     productsCart: [],
     toggleIsOpen: () => {},
     addProductCart: () => {},
@@ -40,6 +42,10 @@ export const CartProvider = ({children}: ChildrenProps) => {
 
     const total = productsCart.reduce((acc, productCart) => {
         return acc + productCart.price * productCart.quantity
+    }, 0)
+
+    const totalQuantity = productsCart.reduce((acc, productCart) => {
+        return acc + productCart.quantity
     }, 0)
 
     // Troca o valor atual do carrinho (true - false)
@@ -127,6 +133,7 @@ export const CartProvider = ({children}: ChildrenProps) => {
             isOpen,
             total,
             productsCart,
+            totalQuantity,
             toggleIsOpen,
             addProductCart,
             decreaseQuantityProductCart,
