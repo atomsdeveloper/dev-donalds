@@ -50,7 +50,7 @@ const CartProductItem = ({product}: CartProductItemProps) => {
             <Button 
                 className="h-7 w-7 rounded-lg" 
                 variant="outline" 
-                onclick={() => removeProductCart(product.id)}
+                onClick={() => removeProductCart(product.id)}
             >
                 <TrashIcon />
             </Button>

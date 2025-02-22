@@ -126,7 +126,7 @@ export const CartProvider = ({children}: ChildrenProps) => {
     const removeProductCart = (productsId: string) => {
         // Filtrando os produtos do carrinho que tiverem o id diferente do id recebido.
         // Removendo o produto. Ficando somente os produtos que não tem o id igual do produto recebido.
-        setProductsCart(productsCart.filter(productCart => productCart.id !== productsId))
+        setProductsCart((productsCart) => productsCart.filter(productCart => productCart.id !== productsId))
     }
     return (
         <CartContext.Provider value={{
