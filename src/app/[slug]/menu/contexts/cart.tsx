@@ -13,8 +13,9 @@ export interface ICartContext {
     productsCart: CartProduct[];
     toggleIsOpen: () => void;
     addProductCart: (product: CartProduct) => void;
-    decreaseQuantityProductCart: (productId: string) => void,
-    increaseQuantityProductCart: (productId: string) => void,
+    decreaseQuantityProductCart: (productId: string) => void;
+    increaseQuantityProductCart: (productId: string) => void;
+    removeProductCart: (productId: string) => void;
 }
 
 export const CartContext = createContext<ICartContext>({
@@ -23,7 +24,8 @@ export const CartContext = createContext<ICartContext>({
     toggleIsOpen: () => {},
     addProductCart: () => {},
     decreaseQuantityProductCart: () => {},
-    increaseQuantityProductCart: () => {}
+    increaseQuantityProductCart: () => {},
+    removeProductCart: () => {}
 })
 
 interface ChildrenProps {
@@ -108,6 +110,12 @@ export const CartProvider = ({children}: ChildrenProps) => {
             })
         })
     }
+
+    const removeProductCart = (productsId: string) => {
+        // Filtrando os produtos do carrinho que tiverem o id diferente do id recebido.
+        // Removendo o produto. Ficando somente os produtos que não tem o id igual do produto recebido.
+        setProductsCart(productsCart.filter(productCart => productCart.id !== productsId))
+    }
     return (
         <CartContext.Provider value={{
             isOpen,
@@ -115,7 +123,8 @@ export const CartProvider = ({children}: ChildrenProps) => {
             toggleIsOpen,
             addProductCart,
             decreaseQuantityProductCart,
-            increaseQuantityProductCart
+            increaseQuantityProductCart,
+            removeProductCart
         }}>
             {children}
         </CartContext.Provider>
