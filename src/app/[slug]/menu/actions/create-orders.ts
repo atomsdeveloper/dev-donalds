@@ -1,3 +1,5 @@
+"use server"
+
 import { ConsumptionMethod } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -7,8 +9,8 @@ import { db } from "@/lib/prisma";
 import { removeCpfPunctuation } from "../helpers/cpf";
 
 interface CreateOrderInputProps {
-  custumerName: string;
-  custumerCpf: string;
+  customerName: string;
+  customerCpf: string;
   products: Array<{
     id: string;
     quantity: number;
@@ -47,8 +49,8 @@ export const createOrder = async (input: CreateOrderInputProps) => {
   await db.order.create({
     data: {
       status: "PENDING",
-      customerName: input.custumerName,
-      customerCpf: removeCpfPunctuation(input.custumerCpf),
+      customerName: input.customerName,
+      customerCpf: removeCpfPunctuation(input.customerCpf),
       orderProducts: {
         createMany: {
           data: productsWithPriceAndQuantities,
@@ -63,5 +65,5 @@ export const createOrder = async (input: CreateOrderInputProps) => {
     },
   });
   revalidatePath(`/${input.slug}/orders`); // Limpa cache antes de redirecionar á página.
-  redirect(`/${input.slug}/orders?cpf=${removeCpfPunctuation(input.custumerCpf)}`)
+  redirect(`/${input.slug}/orders?cpf=${removeCpfPunctuation(input.customerCpf)}`)
 };

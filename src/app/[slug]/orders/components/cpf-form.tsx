@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePathname, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import {z} from "zod"
 
@@ -17,7 +17,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
   } from "@/components/ui/drawer";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
 import { isValidCpf, removeCpfPunctuation } from "../../menu/helpers/cpf";
@@ -74,7 +74,7 @@ const CpfForm = () => {
                   </DrawerDescription>
                 </DrawerHeader>
 
-                    <Form {...form}>
+                    <FormProvider {...form}>
                         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                           {/* CPF */}
                           <FormField
@@ -88,7 +88,7 @@ const CpfForm = () => {
                                   {/* Máscara de CPF */}
                                   <PatternFormat
                                     placeholder="Dígite seu CPF"
-                                    format="###.###.##-##"
+                                    format="###.###.###-##"
                                     customInput={Input}
                                     {...field}
                                   />
@@ -116,7 +116,7 @@ const CpfForm = () => {
                             </DrawerClose>
                           </DrawerFooter>
                         </form>
-                    </Form>
+                    </FormProvider>
        
             </DrawerContent>
         </Drawer>

@@ -15,14 +15,15 @@ import CartProductItem from "./cart-product-item";
 import FinishOrderDialog from "./finish-order-dialog";
 
 const CartSheet = () => {
-  const [finishOrderDialogIsOpen, setFinishOrderDialogIsOpen] =
-    useState<boolean>(false);
+  const [finishOrderDialogIsOpen, setFinishOrderDialogIsOpen] = useState(false);
+
   const { isOpen, toggleIsOpen, productsCart, total } = useContext(CartContext);
+
   return (
     <Sheet open={isOpen} onOpenChange={toggleIsOpen}>
       <SheetContent aria-description="" className="w-[80%]">
         <SheetHeader>
-          <SheetTitle className="text-sm"> Cart Is Open </SheetTitle>
+          <SheetTitle className="text-lg text-start"> Sacola </SheetTitle>
         </SheetHeader>
 
         <div className="flex h-full flex-col py-5">
@@ -35,7 +36,7 @@ const CartSheet = () => {
           <Card className="mb-4">
             <CardContent className="p-5">
               <div className="flex-justify-between">
-                <p className="text-mudet-foreground text-sm">Total</p>
+                <p className="text-muted-foreground text-sm">Total</p>
                 <p className="text-sm font-semibold">{formatCurrency(total)}</p>
               </div>
             </CardContent>
@@ -43,7 +44,7 @@ const CartSheet = () => {
 
           {/* Botão que altera o estado para true para limpar dados do formulário após fechar o dialog */}
           <Button
-            className="w-full rounded-s-full"
+            className="w-full rounded-full"
             onClick={() => setFinishOrderDialogIsOpen(true)}
           >
             Finalizar pedido

@@ -1,4 +1,4 @@
-import { ChevronLeftIcon, ChevronsRightIcon, TrashIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import { useContext } from "react";
 
@@ -25,7 +25,7 @@ const CartProductItem = ({product}: CartProductItemProps) => {
                     <p className="text-xs max-w-[90%] truncate text-ellipsis">{product.name}</p>
                     <p className="text-sm font-semibold">{formatCurrency(product.price)}</p>
 
-                    <div className="flex-items-center gap-1 text-center">
+                    <div className="flex items-center gap-1 text-center">
                         <Button 
                             className="h-7 w-7 rounded-lg" 
                             variant="outline" 
@@ -41,7 +41,7 @@ const CartProductItem = ({product}: CartProductItemProps) => {
                             variant="destructive"
                             onClick={()=> increaseQuantityProductCart(product.id)}
                         >
-                            <ChevronsRightIcon />
+                            <ChevronRightIcon />
                         </Button>
                     </div>
                 </div>

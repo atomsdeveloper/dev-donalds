@@ -111,11 +111,6 @@ export const CartProvider = ({children}: ChildrenProps) => {
                     // Se for diferente não reliza nenhuma ação
                     return productCart
                 }
-                // Verifica se a quantidade do produto é 1
-                if(productCart.quantity === 1) {
-                    // Se for igual 1 não realiza nehuma ação
-                    return productCart
-                }
 
                 // Passado das validações acima que dizer que posso aumentar a quantidade do carrinhp
                 return {...productCart, quantity: productCart.quantity + 1};

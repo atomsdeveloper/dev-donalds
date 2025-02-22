@@ -5,7 +5,7 @@ import { ConsumptionMethod } from "@prisma/client";
 import { Loader2Icon } from "lucide-react";
 import { useParams, useSearchParams } from "next/navigation";
 import { useContext, useTransition } from "react";
-import { Form, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -43,9 +43,11 @@ export const formSchema = z.object({
   cpf: z
     .string()
     .trim()
-    .min(1)
+    .min(1, {
+      message: "O CPF é obrigatório."
+    })
     .refine((value) => isValidCpf(value), {
-      message: "CPF é obrigatório",
+      message: "CPF inválido",
     }),
 });
 
@@ -59,10 +61,11 @@ interface FinishOrderDialogProps {
 }
 
 const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
+  
   const { productsCart } = useContext(CartContext);
   const { slug } = useParams<{ slug: string }>();
 
-  const [isPending, starTrasition] = useTransition()
+  const [isPending, startTransition] = useTransition()
 
   // React useForm usa o TypeFormSchema criado acima como tipos.
   const form = useForm<TypeFormSchema>({
@@ -82,11 +85,11 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
   // Só vai ser executado se os dados do formulário forem válidos.
   const onSubmit = async (data: TypeFormSchema) => {
     try {
-      starTrasition(async () => {
+      startTransition(async () => {
         await createOrder({
           consumptionMethod,
-          custumerCpf: data.cpf,
-          custumerName: data.name,
+          customerCpf: data.cpf,
+          customerName: data.name,
           products: productsCart,
           slug,
         });
@@ -95,7 +98,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         toast.success("Pedido finalizado com sucesso.")
       })
     } catch (error) {
-      console.log(error);
+      toast.error(`Erro ao finalizar o pedido. Tente novamente. ${error}`)
     }
   };
   return (
@@ -111,7 +114,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         </DrawerHeader>
 
         <div className="p-5">
-          <Form {...form}>
+          <FormProvider {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               {/* NOME */}
               <FormField
@@ -133,16 +136,17 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
               {/* CPF */}
               <FormField
                 control={form.control}
-                name="name"
+                name="cpf"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel>Seu CPF</FormLabel>
 
                     <FormControl>
                       {/* Máscara de CPF */}
                       <PatternFormat
                         placeholder="Dígite seu CPF"
-                        format="###.###.##-##"
+                        format="###.###.###-##"
+                        mask="_"
                         customInput={Input}
                         {...field}
                       />
@@ -155,8 +159,9 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
 
               {/* Botões do Dialog */}
               <DrawerFooter>
-                <Button type="submit" variant="destructive" disabled={isPending}>
-                  {isPending ? <Loader2Icon className="animate-spin"/> : "Finalizar"}
+                <Button type="submit" className="rounded-full" variant="destructive" disabled={isPending}>
+                  {isPending && (<Loader2Icon className="animate-spin"/>)}
+                  Finalizar
                 </Button>
 
                 <DrawerClose asChild>
@@ -166,7 +171,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
                 </DrawerClose>
               </DrawerFooter>
             </form>
-          </Form>
+          </FormProvider>
         </div>
       </DrawerContent>
     </Drawer>
