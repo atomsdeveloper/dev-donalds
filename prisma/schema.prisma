@@ -13,6 +13,56 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model User {
+  id                String              @id @default(uuid())
+  name              String?
+  email             String?             @unique
+  password          String?
+  role              Role
+  image             String?
+  sessions          Session[]
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  VerificationToken VerificationToken[]
+  rous              Rou[]
+}
+
+model Rou {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String?  @unique
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin   User   @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId String
+}
+
+model VerificationToken {
+  identifier String   @unique
+  token      String   @unique
+  expires    DateTime
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+enum Role {
+  ADMIN
+  ROU
+}
 model Restaurant {
   id             String         @id @default(uuid())
   name           String
