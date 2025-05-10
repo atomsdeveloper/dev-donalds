@@ -97,6 +97,7 @@ const FinishOrderDialog = ({ open, onOpenChange }: FinishOrderDialogProps) => {
         onOpenChange(false);
         toast.success("Pedido finalizado com sucesso.")
       })
+      toast.success("Pedido finalizado com sucesso.")
     } catch (error) {
       toast.error(`Erro ao finalizar o pedido. Tente novamente. ${error}`)
     }

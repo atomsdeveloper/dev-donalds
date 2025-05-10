@@ -38,13 +38,21 @@ export const createOrder = async (input: CreateOrderInputProps) => {
     },
   });
 
-  const productsWithPriceAndQuantities = input.products.map((product) => ({
+  const productsWithPriceAndQuantities = input.products.map((product) => {
+  const matchedProduct = productsWithPrice.find(
+    (productWithPrice) => productWithPrice.id === product.id,
+  );
+
+  if (!matchedProduct) {
+    throw new Error(`Produto com ID ${product.id} não encontrado no banco de dados.`);
+  }
+
+  return {
     productId: product.id,
     quantity: product.quantity,
-    price: productsWithPrice.find(
-      (productWithPrice) => productWithPrice.id === product.id,
-    )!.price,
-  }));
+    price: matchedProduct.price,
+  };
+});
 
   await db.order.create({
     data: {
